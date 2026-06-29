@@ -21,10 +21,10 @@ function HomePage() {
         <div>
           <p className="text-sm uppercase tracking-[0.3em] text-indigo-400">Student Prediction Web App</p>
           <h1 className="mt-5 text-4xl font-bold tracking-tight text-white sm:text-5xl">
-            Build a multi-page Student Performance prediction app with React and Express.
+            Predict student performance with a responsive React dashboard.
           </h1>
           <p className="mt-6 max-w-xl text-slate-300 leading-8 text-lg">
-            This app is organized with separate pages for clean navigation, reusable components, and a strong foundation for machine learning integration.
+            This app lets you generate student performance predictions, review results, and explore insights with a clean, multi-page interface.
           </p>
 
           <div className="mt-10 flex flex-col gap-4 sm:flex-row">
