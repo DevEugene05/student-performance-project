@@ -1,21 +1,18 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { predictStudent } from '../services/api.js'
 
 const initialState = {
-  age: '',
-  studytime: '',
-  failures: '',
-  absences: '',
-  G1: '',
-  G2: '',
+  level: '',
+  attendance_rate: '',
+  assignment_score: '',
+  midterm_score: '',
 }
 
 function PredictionPage() {
   const [formData, setFormData] = useState(initialState)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  const navigate = useNavigate()
+  const [prediction, setPrediction] = useState('')
 
   const handleChange = (event) => {
     const { name, value } = event.target
@@ -26,27 +23,18 @@ function PredictionPage() {
     event.preventDefault()
     setError('')
     setLoading(true)
+    setPrediction('')
 
     try {
       const payload = {
-        age: Number(formData.age),
-        studytime: Number(formData.studytime),
-        failures: Number(formData.failures),
-        absences: Number(formData.absences),
-        G1: Number(formData.G1),
-        G2: Number(formData.G2),
+        level: formData.level,
+        attendance_rate: Number(formData.attendance_rate),
+        assignment_score: Number(formData.assignment_score),
+        midterm_score: Number(formData.midterm_score),
       }
 
       const result = await predictStudent(payload)
-      const savedPrediction = {
-        ...payload,
-        prediction: result.prediction,
-        label: result.label || 'Prediction generated',
-        createdAt: new Date().toISOString(),
-      }
-
-      localStorage.setItem('latestPrediction', JSON.stringify(savedPrediction))
-      navigate('/results', { state: savedPrediction })
+      setPrediction(result.prediction)
     } catch (fetchError) {
       setError(fetchError.message)
     } finally {
@@ -59,41 +47,39 @@ function PredictionPage() {
       <div className="mb-10">
         <p className="text-sm uppercase tracking-[0.3em] text-indigo-400">Prediction Form</p>
         <h1 className="mt-4 text-4xl font-bold tracking-tight text-white sm:text-5xl">
-          Enter student data to generate a performance prediction.
+          Enter student performance metrics to get an outcome prediction.
         </h1>
         <p className="mt-6 text-slate-300 leading-8">
-          The backend will receive student details, process the request, and return a prediction in a clean, reusable flow.
+          Submit the values to the backend and view whether the student is classified as Safe or At-Risk.
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className="grid gap-6 rounded-3xl border border-white/10 bg-white/5 p-8 shadow-xl shadow-black/20">
         <div className="grid gap-6 md:grid-cols-2">
           <label className="block">
-            <span className="text-sm font-medium text-slate-200">Age</span>
+            <span className="text-sm font-medium text-slate-200">Level</span>
             <input
-              type="number"
-              name="age"
-              value={formData.age}
+              type="text"
+              name="level"
+              value={formData.level}
               onChange={handleChange}
               className="mt-2 w-full rounded-2xl border border-white/10 bg-slate-900/80 px-4 py-3 text-white outline-none focus:border-indigo-400"
-              placeholder="15"
-              min="10"
-              max="25"
+              placeholder="Freshman"
               required
             />
           </label>
 
           <label className="block">
-            <span className="text-sm font-medium text-slate-200">Study Time (hours/week)</span>
+            <span className="text-sm font-medium text-slate-200">Attendance Rate</span>
             <input
               type="number"
-              name="studytime"
-              value={formData.studytime}
+              name="attendance_rate"
+              value={formData.attendance_rate}
               onChange={handleChange}
               className="mt-2 w-full rounded-2xl border border-white/10 bg-slate-900/80 px-4 py-3 text-white outline-none focus:border-indigo-400"
-              placeholder="3"
-              min="1"
-              max="20"
+              placeholder="92"
+              min="0"
+              max="100"
               required
             />
           </label>
@@ -101,63 +87,31 @@ function PredictionPage() {
 
         <div className="grid gap-6 md:grid-cols-2">
           <label className="block">
-            <span className="text-sm font-medium text-slate-200">Past Failures</span>
+            <span className="text-sm font-medium text-slate-200">Assignment Score</span>
             <input
               type="number"
-              name="failures"
-              value={formData.failures}
+              name="assignment_score"
+              value={formData.assignment_score}
               onChange={handleChange}
               className="mt-2 w-full rounded-2xl border border-white/10 bg-slate-900/80 px-4 py-3 text-white outline-none focus:border-indigo-400"
-              placeholder="0"
+              placeholder="88"
               min="0"
-              max="10"
+              max="100"
               required
             />
           </label>
 
           <label className="block">
-            <span className="text-sm font-medium text-slate-200">Absences</span>
+            <span className="text-sm font-medium text-slate-200">Midterm Score</span>
             <input
               type="number"
-              name="absences"
-              value={formData.absences}
+              name="midterm_score"
+              value={formData.midterm_score}
               onChange={handleChange}
               className="mt-2 w-full rounded-2xl border border-white/10 bg-slate-900/80 px-4 py-3 text-white outline-none focus:border-indigo-400"
-              placeholder="2"
+              placeholder="84"
               min="0"
-              max="30"
-              required
-            />
-          </label>
-        </div>
-
-        <div className="grid gap-6 md:grid-cols-2">
-          <label className="block">
-            <span className="text-sm font-medium text-slate-200">First Period Grade (G1)</span>
-            <input
-              type="number"
-              name="G1"
-              value={formData.G1}
-              onChange={handleChange}
-              className="mt-2 w-full rounded-2xl border border-white/10 bg-slate-900/80 px-4 py-3 text-white outline-none focus:border-indigo-400"
-              placeholder="12"
-              min="0"
-              max="20"
-              required
-            />
-          </label>
-
-          <label className="block">
-            <span className="text-sm font-medium text-slate-200">Second Period Grade (G2)</span>
-            <input
-              type="number"
-              name="G2"
-              value={formData.G2}
-              onChange={handleChange}
-              className="mt-2 w-full rounded-2xl border border-white/10 bg-slate-900/80 px-4 py-3 text-white outline-none focus:border-indigo-400"
-              placeholder="14"
-              min="0"
-              max="20"
+              max="100"
               required
             />
           </label>
@@ -165,12 +119,31 @@ function PredictionPage() {
 
         {error && <p className="rounded-2xl bg-red-500/20 px-4 py-3 text-sm text-red-200">{error}</p>}
 
+        {loading && (
+          <div className="flex items-center gap-3 text-sm text-slate-200">
+            <div className="h-5 w-5 animate-spin rounded-full border-2 border-indigo-400 border-t-transparent" />
+            <span>Loading...</span>
+          </div>
+        )}
+
+        {!loading && prediction && (
+          prediction === 'Safe' ? (
+            <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/15 px-4 py-3 text-sm font-medium text-emerald-300">
+              Green Success: Safe
+            </div>
+          ) : (
+            <div className="rounded-2xl border border-rose-500/30 bg-rose-500/15 px-4 py-3 text-sm font-medium text-rose-300">
+              Red Warning: At-Risk
+            </div>
+          )
+        )}
+
         <button
           type="submit"
           disabled={loading}
           className="rounded-full bg-indigo-500 px-8 py-4 text-sm font-semibold text-white transition hover:bg-indigo-400 disabled:cursor-not-allowed disabled:bg-slate-700"
         >
-          {loading ? 'Sending request...' : 'Submit to Predict'}
+          {loading ? 'Predicting...' : 'Predict Outcome'}
         </button>
       </form>
     </section>

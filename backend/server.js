@@ -1,8 +1,10 @@
 const express = require('express')
 const cors = require('cors')
+const axios = require('axios')
 
 const app = express()
 const PORT = process.env.PORT || 5000
+const FLASK_URL = process.env.FLASK_URL || 'http://localhost:5001/predict'
 
 app.use(cors())
 app.use(express.json())
@@ -11,26 +13,7 @@ app.get('/', (req, res) => {
   res.json({ message: 'Backend is running', status: 'ok' })
 })
 
-function computePrediction(data) {
-  const age = Number(data.age || 0)
-  const studytime = Number(data.studytime || 0)
-  const failures = Number(data.failures || 0)
-  const absences = Number(data.absences || 0)
-  const G1 = Number(data.G1 || 0)
-  const G2 = Number(data.G2 || 0)
-
-  const gradeAverage = (G1 + G2) / 2
-  const riskScore = failures * 2 + absences * 0.3 + (studytime <= 1 ? 5 : 0)
-  const predictedGrade = Math.round(Math.min(20, Math.max(0, gradeAverage - riskScore + 2)))
-  const label = predictedGrade >= 12 ? 'Likely passing' : predictedGrade >= 8 ? 'Needs attention' : 'At risk'
-
-  return {
-    prediction: predictedGrade,
-    label,
-  }
-}
-
-app.post('/api/predict', (req, res) => {
+app.post('/api/predict', async (req, res) => {
   const studentData = req.body
 
   if (!studentData || typeof studentData !== 'object') {
@@ -38,11 +21,23 @@ app.post('/api/predict', (req, res) => {
   }
 
   try {
-    const prediction = computePrediction(studentData)
-    res.json(prediction)
+    const response = await axios.post(FLASK_URL, {
+      level: studentData.level || 'Freshman',
+      attendance_rate: studentData.attendance_rate ?? studentData.attendanceRate ?? studentData.attendance,
+      assignment_score: studentData.assignment_score ?? studentData.assignmentScore,
+      midterm_score: studentData.midterm_score ?? studentData.midtermScore,
+    })
+
+    return res.json({
+      prediction: response.data.prediction,
+      label: response.data.prediction,
+    })
   } catch (error) {
-    console.error('Prediction error:', error)
-    res.status(500).json({ error: 'Prediction processing failed' })
+    console.error('Prediction forwarding error:', error.message)
+    return res.status(502).json({
+      error: 'Failed to reach prediction service',
+      details: error.response?.data || error.message,
+    })
   }
 })
 

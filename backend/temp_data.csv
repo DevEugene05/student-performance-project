@@ -1,0 +1,21 @@
+student_id,fullname,level,course_code,attendance_rate,assignment_score,midterm_score,prediction_status
+1,Alice Smith,Freshman,CS101,92,88,84,Safe
+2,Bob Jones,Sophomore,MATH201,78,70,68,At-Risk
+3,Carol Lee,Junior,ENG301,85,82,80,Safe
+4,David Kim,Senior,CS201,65,60,58,At-Risk
+5,Eva Brown,Freshman,PHYS101,90,86,82,Safe
+6,Frank Green,Sophomore,BIO201,72,66,64,At-Risk
+7,Gina White,Junior,CS101,88,84,81,Safe
+8,Henry Black,Senior,MATH201,70,62,60,At-Risk
+9,Ivy Hall,Freshman,ENG301,95,90,87,Safe
+10,Jack Stone,Sophomore,CS201,74,68,66,At-Risk
+11,Karen Cole,Junior,PHYS101,83,79,76,Safe
+12,Liam Reed,Senior,BIO201,68,63,61,At-Risk
+13,Mia Adams,Freshman,CS101,91,87,83,Safe
+14,Noah Bell,Sophomore,MATH201,76,69,67,At-Risk
+15,Olivia Clark,Junior,ENG301,86,81,78,Safe
+16,Peter Davis,Senior,CS201,67,61,59,At-Risk
+17,Quinn Evans,Freshman,PHYS101,89,85,80,Safe
+18,Ruby Foster,Sophomore,BIO201,73,67,65,At-Risk
+19,Sam Grant,Junior,CS101,87,83,79,Safe
+20,Tina Harris,Senior,MATH201,69,64,62,At-Risk
