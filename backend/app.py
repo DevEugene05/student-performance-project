@@ -6,10 +6,13 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 MODEL_PATH = os.path.join(os.path.dirname(__file__), "academic_model.pkl")
 model = joblib.load(MODEL_PATH)
+
+HOST = os.environ.get("HOST", "0.0.0.0")
+PORT = int(os.environ.get("PORT", "5000"))
 
 REQUIRED_FIELDS = ["level", "attendance_rate", "assignment_score", "midterm_score"]
 LABELS = {0: "Safe", 1: "At-Risk"}
@@ -63,4 +66,4 @@ def predict():
 
 
 if __name__ == "__main__":
-    app.run(port=5000, debug=True)
+    app.run(host=HOST, port=PORT, debug=True)
