@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext.jsx'
 
 const navItems = [
   { label: 'Home', path: '/' },
@@ -7,11 +8,18 @@ const navItems = [
   { label: 'Predict', path: '/predict' },
   { label: 'Results', path: '/results' },
   { label: 'About', path: '/about' },
-  { label: 'Login / Register', path: '/auth' },
 ]
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const { user, logout, isAuthenticated } = useAuth()
+  const navigate = useNavigate()
+
+  const handleLogout = () => {
+    logout()
+    setMenuOpen(false)
+    navigate('/')
+  }
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-slate-950/95 backdrop-blur-xl shadow-black/20">
@@ -53,12 +61,26 @@ function Navbar() {
           ))}
         </nav>
 
-        <NavLink
-          to="/predict"
-          className="hidden rounded-full bg-indigo-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-500/20 transition hover:bg-indigo-400 md:inline-flex"
-        >
-          Start Prediction
-        </NavLink>
+        <div className="hidden gap-3 md:flex items-center">
+          {isAuthenticated ? (
+            <>
+              <span className="text-sm text-slate-300">Welcome, <span className="font-semibold text-white">{user?.name}</span></span>
+              <button
+                onClick={handleLogout}
+                className="rounded-full bg-red-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-red-600/20 transition hover:bg-red-700"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <NavLink
+              to="/auth"
+              className="rounded-full bg-indigo-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-500/20 transition hover:bg-indigo-400"
+            >
+              Login / Register
+            </NavLink>
+          )}
+        </div>
       </div>
 
       <div className={`${menuOpen ? 'block' : 'hidden'} border-t border-white/10 bg-slate-950/95 md:hidden`}>
@@ -79,6 +101,28 @@ function Navbar() {
                 {item.label}
               </NavLink>
             ))}
+            {isAuthenticated && (
+              <div className="border-t border-white/10 pt-3 mt-3">
+                <p className="text-sm text-slate-300 px-4 py-2">
+                  Welcome, <span className="font-semibold text-white">{user?.name}</span>
+                </p>
+                <button
+                  onClick={handleLogout}
+                  className="w-full rounded-2xl bg-red-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-red-700"
+                >
+                  Logout
+                </button>
+              </div>
+            )}
+            {!isAuthenticated && (
+              <NavLink
+                to="/auth"
+                className="rounded-2xl px-4 py-3 text-sm font-medium bg-indigo-500 text-white hover:bg-indigo-400 transition"
+                onClick={() => setMenuOpen(false)}
+              >
+                Login / Register
+              </NavLink>
+            )}
           </nav>
         </div>
       </div>
