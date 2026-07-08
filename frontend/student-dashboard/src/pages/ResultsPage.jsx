@@ -51,13 +51,27 @@ function ResultsPage() {
         <div className="rounded-3xl border border-white/10 bg-white/5 p-8 shadow-xl shadow-black/20">
           <p className="text-sm uppercase tracking-[0.3em] text-slate-400">Student Inputs</p>
           <div className="mt-6 grid gap-4">
-            {['age', 'studytime', 'failures', 'absences', 'G1', 'G2'].map((field) => (
+            {['level', 'attendance_rate', 'assignment_score', 'midterm_score'].map((field) => (
               <div key={field} className="rounded-2xl bg-slate-900/70 p-4">
                 <p className="text-xs uppercase tracking-[0.2em] text-slate-500">{field}</p>
                 <p className="mt-2 text-lg font-semibold text-white">{savedResult[field]}</p>
               </div>
             ))}
           </div>
+
+          <div className="mt-8">
+            <p className="text-sm uppercase tracking-[0.3em] text-slate-400">Rule-based interventions</p>
+            <div className="mt-4 space-y-3">
+              {(savedResult.interventions || []).map((intervention, index) => (
+                <div key={`${intervention.title}-${index}`} className="rounded-2xl border border-indigo-500/20 bg-slate-900/70 p-4">
+                  <p className="text-sm font-semibold text-white">{intervention.title}</p>
+                  <p className="mt-1 text-sm text-slate-300">{intervention.message}</p>
+                  <p className="mt-2 text-xs uppercase tracking-[0.2em] text-slate-500">Priority: {intervention.priority}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
           <Link
             to="/predict"
             className="mt-8 inline-flex rounded-full bg-indigo-500 px-6 py-3 text-sm font-semibold text-white transition hover:bg-indigo-400"

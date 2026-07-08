@@ -18,6 +18,48 @@ REQUIRED_FIELDS = ["level", "attendance_rate", "assignment_score", "midterm_scor
 LABELS = {0: "Safe", 1: "At-Risk"}
 
 
+def get_interventions(data):
+    attendance = float(data.get("attendance_rate", 0))
+    assignment = float(data.get("assignment_score", 0))
+    midterm = float(data.get("midterm_score", 0))
+
+    interventions = []
+
+    if attendance < 75:
+        interventions.append({
+            "title": "Attendance support",
+            "message": "Schedule a meeting with the student to review attendance barriers and set a weekly attendance goal.",
+            "priority": "high",
+            "reason": "Attendance is below the recommended threshold.",
+        })
+
+    if assignment < 70:
+        interventions.append({
+            "title": "Assignment recovery plan",
+            "message": "Provide a short assignment recovery plan and office-hour support for missed work.",
+            "priority": "medium",
+            "reason": "Assignment performance is below the expected benchmark.",
+        })
+
+    if midterm < 60:
+        interventions.append({
+            "title": "Academic coaching",
+            "message": "Set up a coaching session focused on study habits, pacing, and exam preparation.",
+            "priority": "high",
+            "reason": "Midterm performance indicates immediate academic support is needed.",
+        })
+
+    if not interventions:
+        interventions.append({
+            "title": "Maintain progress",
+            "message": "Keep reinforcing current study habits and monitor progress weekly.",
+            "priority": "low",
+            "reason": "The student is performing within the expected range.",
+        })
+
+    return interventions
+
+
 def prepare_features(data):
     if not isinstance(data, dict):
         raise ValueError("Request body must be a JSON object")
@@ -59,8 +101,9 @@ def predict():
         features = prepare_features(payload)
         prediction = model.predict(features)[0]
         label = LABELS.get(int(prediction), str(prediction))
+        interventions = get_interventions(payload)
 
-        return jsonify({"prediction": label})
+        return jsonify({"prediction": label, "interventions": interventions})
     except Exception as exc:
         return jsonify({"error": str(exc)}), 400
 

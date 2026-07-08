@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { predictStudent } from '../services/api.js'
 
 const initialState = {
@@ -9,6 +10,7 @@ const initialState = {
 }
 
 function PredictionPage() {
+  const navigate = useNavigate()
   const [formData, setFormData] = useState(initialState)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
@@ -34,7 +36,14 @@ function PredictionPage() {
       }
 
       const result = await predictStudent(payload)
+      const resultPayload = {
+        ...result,
+        ...payload,
+        createdAt: new Date().toISOString(),
+      }
+      localStorage.setItem('latestPrediction', JSON.stringify(resultPayload))
       setPrediction(result.prediction)
+      navigate('/results', { state: resultPayload })
     } catch (fetchError) {
       setError(fetchError.message)
     } finally {
