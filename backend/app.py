@@ -3,8 +3,10 @@ import os
 import joblib
 import pandas as pd
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 MODEL_PATH = os.path.join(os.path.dirname(__file__), "academic_model.pkl")
 model = joblib.load(MODEL_PATH)
@@ -44,7 +46,7 @@ def prepare_features(data):
     return encoded
 
 
-@app.route("/predict", methods=["POST"])
+@app.route("/api/predict", methods=["POST"])
 def predict():
     try:
         payload = request.get_json(silent=True)
@@ -61,4 +63,4 @@ def predict():
 
 
 if __name__ == "__main__":
-    app.run(port=5001, debug=True)
+    app.run(port=5000, debug=True)
