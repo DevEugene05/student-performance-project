@@ -1,10 +1,11 @@
 const express = require('express')
 const cors = require('cors')
 const axios = require('axios')
+const { normalizeFlaskPredictionUrl } = require('./predictService')
 
 const app = express()
 const PORT = process.env.PORT || 5000
-const FLASK_URL = process.env.FLASK_URL || 'http://localhost:5001/predict'
+const FLASK_URL = normalizeFlaskPredictionUrl(process.env.FLASK_URL || 'http://127.0.0.1:5001/predict')
 
 app.use(cors())
 app.use(express.json())
@@ -31,6 +32,7 @@ app.post('/api/predict', async (req, res) => {
     return res.json({
       prediction: response.data.prediction,
       label: response.data.prediction,
+      interventions: response.data.interventions || [],
     })
   } catch (error) {
     console.error('Prediction forwarding error:', error.message)
