@@ -9,7 +9,20 @@ export async function predictStudent(studentData) {
     body: JSON.stringify(studentData),
   })
 
-  const payload = await response.json()
+  let payload = {}
+  const contentType = response.headers.get('content-type') || ''
+
+  if (contentType.includes('application/json')) {
+    try {
+      payload = await response.json()
+    } catch (error) {
+      payload = { error: 'Prediction service returned an invalid JSON response' }
+    }
+  } else {
+    const text = await response.text()
+    payload = text ? { error: text } : { error: 'Prediction service returned an empty response' }
+  }
+
   if (!response.ok) {
     throw new Error(payload.error || 'Prediction request failed')
   }
