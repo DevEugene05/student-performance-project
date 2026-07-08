@@ -95,8 +95,13 @@ def prepare_features(data):
 def predict():
     try:
         payload = request.get_json(silent=True)
+        if payload is None:
+            payload = request.form.to_dict(flat=True)
         if not payload:
             return jsonify({"error": "Missing JSON payload"}), 400
+
+        if isinstance(payload, dict):
+            payload = {key: (value if value != '' else None) for key, value in payload.items()}
 
         features = prepare_features(payload)
         prediction = model.predict(features)[0]

@@ -1,9 +1,10 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || ''
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000'
 
 export async function predictStudent(studentData) {
   const response = await fetch(`${API_BASE_URL}/api/predict`, {
     method: 'POST',
     headers: {
+      'Accept': 'application/json',
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(studentData),
