@@ -23,10 +23,14 @@ app.post('/api/predict', async (req, res) => {
 
   try {
     const response = await axios.post(FLASK_URL, {
-      level: studentData.level || 'Freshman',
-      attendance_rate: studentData.attendance_rate ?? studentData.attendanceRate ?? studentData.attendance,
-      assignment_score: studentData.assignment_score ?? studentData.assignmentScore,
-      midterm_score: studentData.midterm_score ?? studentData.midtermScore,
+      admission_grade: studentData.admission_grade,
+      previous_qualification_grade: studentData.previous_qualification_grade,
+      age_at_enrollment: studentData.age_at_enrollment,
+      curricular_units_1st_sem_grade: studentData.curricular_units_1st_sem_grade,
+      curricular_units_2nd_sem_grade: studentData.curricular_units_2nd_sem_grade,
+      unemployment_rate: studentData.unemployment_rate,
+      inflation_rate: studentData.inflation_rate,
+      gdp: studentData.gdp,
     })
 
     return res.json({

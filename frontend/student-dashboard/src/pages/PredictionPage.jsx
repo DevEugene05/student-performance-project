@@ -3,10 +3,14 @@ import { useNavigate } from 'react-router-dom'
 import { predictStudent } from '../services/api.js'
 
 const initialState = {
-  level: '',
-  attendance_rate: '',
-  assignment_score: '',
-  midterm_score: '',
+  admission_grade: '',
+  previous_qualification_grade: '',
+  age_at_enrollment: '',
+  curricular_units_1st_sem_grade: '',
+  curricular_units_2nd_sem_grade: '',
+  unemployment_rate: '',
+  inflation_rate: '',
+  gdp: '',
 }
 
 function PredictionPage() {
@@ -29,10 +33,14 @@ function PredictionPage() {
 
     try {
       const payload = {
-        level: formData.level,
-        attendance_rate: Number(formData.attendance_rate),
-        assignment_score: Number(formData.assignment_score),
-        midterm_score: Number(formData.midterm_score),
+        admission_grade: Number(formData.admission_grade),
+        previous_qualification_grade: Number(formData.previous_qualification_grade),
+        age_at_enrollment: Number(formData.age_at_enrollment),
+        curricular_units_1st_sem_grade: Number(formData.curricular_units_1st_sem_grade),
+        curricular_units_2nd_sem_grade: Number(formData.curricular_units_2nd_sem_grade),
+        unemployment_rate: Number(formData.unemployment_rate),
+        inflation_rate: Number(formData.inflation_rate),
+        gdp: Number(formData.gdp),
       }
 
       const result = await predictStudent(payload)
@@ -56,39 +64,37 @@ function PredictionPage() {
       <div className="mb-10">
         <p className="text-sm uppercase tracking-[0.3em] text-indigo-400">Prediction Form</p>
         <h1 className="mt-4 text-4xl font-bold tracking-tight text-white sm:text-5xl">
-          Enter student performance metrics to get an outcome prediction.
+          Enter student profile metrics to predict the outcome.
         </h1>
         <p className="mt-6 text-slate-300 leading-8">
-          Submit the values to the backend and view whether the student is classified as Safe or At-Risk.
+          Submit the values to the backend and view whether the student is classified as Dropout, Enrolled, or Graduate.
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className="grid gap-6 rounded-3xl border border-white/10 bg-white/5 p-8 shadow-xl shadow-black/20">
         <div className="grid gap-6 md:grid-cols-2">
           <label className="block">
-            <span className="text-sm font-medium text-slate-200">Level</span>
+            <span className="text-sm font-medium text-slate-200">Admission Grade</span>
             <input
-              type="text"
-              name="level"
-              value={formData.level}
+              type="number"
+              name="admission_grade"
+              value={formData.admission_grade}
               onChange={handleChange}
               className="mt-2 w-full rounded-2xl border border-white/10 bg-slate-900/80 px-4 py-3 text-white outline-none focus:border-indigo-400"
-              placeholder="Freshman"
+              placeholder="140"
               required
             />
           </label>
 
           <label className="block">
-            <span className="text-sm font-medium text-slate-200">Attendance Rate</span>
+            <span className="text-sm font-medium text-slate-200">Previous Qualification Grade</span>
             <input
               type="number"
-              name="attendance_rate"
-              value={formData.attendance_rate}
+              name="previous_qualification_grade"
+              value={formData.previous_qualification_grade}
               onChange={handleChange}
               className="mt-2 w-full rounded-2xl border border-white/10 bg-slate-900/80 px-4 py-3 text-white outline-none focus:border-indigo-400"
-              placeholder="92"
-              min="0"
-              max="100"
+              placeholder="130"
               required
             />
           </label>
@@ -96,31 +102,83 @@ function PredictionPage() {
 
         <div className="grid gap-6 md:grid-cols-2">
           <label className="block">
-            <span className="text-sm font-medium text-slate-200">Assignment Score</span>
+            <span className="text-sm font-medium text-slate-200">Age at Enrollment</span>
             <input
               type="number"
-              name="assignment_score"
-              value={formData.assignment_score}
+              name="age_at_enrollment"
+              value={formData.age_at_enrollment}
               onChange={handleChange}
               className="mt-2 w-full rounded-2xl border border-white/10 bg-slate-900/80 px-4 py-3 text-white outline-none focus:border-indigo-400"
-              placeholder="88"
-              min="0"
-              max="100"
+              placeholder="19"
               required
             />
           </label>
 
           <label className="block">
-            <span className="text-sm font-medium text-slate-200">Midterm Score</span>
+            <span className="text-sm font-medium text-slate-200">1st Semester Grade</span>
             <input
               type="number"
-              name="midterm_score"
-              value={formData.midterm_score}
+              name="curricular_units_1st_sem_grade"
+              value={formData.curricular_units_1st_sem_grade}
               onChange={handleChange}
               className="mt-2 w-full rounded-2xl border border-white/10 bg-slate-900/80 px-4 py-3 text-white outline-none focus:border-indigo-400"
-              placeholder="84"
-              min="0"
-              max="100"
+              placeholder="13.4"
+              required
+            />
+          </label>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-2">
+          <label className="block">
+            <span className="text-sm font-medium text-slate-200">2nd Semester Grade</span>
+            <input
+              type="number"
+              name="curricular_units_2nd_sem_grade"
+              value={formData.curricular_units_2nd_sem_grade}
+              onChange={handleChange}
+              className="mt-2 w-full rounded-2xl border border-white/10 bg-slate-900/80 px-4 py-3 text-white outline-none focus:border-indigo-400"
+              placeholder="14.2"
+              required
+            />
+          </label>
+
+          <label className="block">
+            <span className="text-sm font-medium text-slate-200">Unemployment Rate</span>
+            <input
+              type="number"
+              name="unemployment_rate"
+              value={formData.unemployment_rate}
+              onChange={handleChange}
+              className="mt-2 w-full rounded-2xl border border-white/10 bg-slate-900/80 px-4 py-3 text-white outline-none focus:border-indigo-400"
+              placeholder="10.8"
+              required
+            />
+          </label>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-2">
+          <label className="block">
+            <span className="text-sm font-medium text-slate-200">Inflation Rate</span>
+            <input
+              type="number"
+              name="inflation_rate"
+              value={formData.inflation_rate}
+              onChange={handleChange}
+              className="mt-2 w-full rounded-2xl border border-white/10 bg-slate-900/80 px-4 py-3 text-white outline-none focus:border-indigo-400"
+              placeholder="1.4"
+              required
+            />
+          </label>
+
+          <label className="block">
+            <span className="text-sm font-medium text-slate-200">GDP</span>
+            <input
+              type="number"
+              name="gdp"
+              value={formData.gdp}
+              onChange={handleChange}
+              className="mt-2 w-full rounded-2xl border border-white/10 bg-slate-900/80 px-4 py-3 text-white outline-none focus:border-indigo-400"
+              placeholder="1.74"
               required
             />
           </label>
@@ -136,13 +194,17 @@ function PredictionPage() {
         )}
 
         {!loading && prediction && (
-          prediction === 'Safe' ? (
+          prediction === 'Graduate' ? (
             <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/15 px-4 py-3 text-sm font-medium text-emerald-300">
-              Green Success: Safe
+              Green Success: Graduate
+            </div>
+          ) : prediction === 'Enrolled' ? (
+            <div className="rounded-2xl border border-amber-500/30 bg-amber-500/15 px-4 py-3 text-sm font-medium text-amber-300">
+              Amber Info: Enrolled
             </div>
           ) : (
             <div className="rounded-2xl border border-rose-500/30 bg-rose-500/15 px-4 py-3 text-sm font-medium text-rose-300">
-              Red Warning: At-Risk
+              Red Warning: Dropout
             </div>
           )
         )}

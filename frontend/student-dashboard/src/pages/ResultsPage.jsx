@@ -51,7 +51,7 @@ function ResultsPage() {
         <div className="rounded-3xl border border-white/10 bg-white/5 p-8 shadow-xl shadow-black/20">
           <p className="text-sm uppercase tracking-[0.3em] text-slate-400">Student Inputs</p>
           <div className="mt-6 grid gap-4">
-            {['level', 'attendance_rate', 'assignment_score', 'midterm_score'].map((field) => (
+            {['admission_grade', 'previous_qualification_grade', 'age_at_enrollment', 'curricular_units_1st_sem_grade', 'curricular_units_2nd_sem_grade', 'unemployment_rate', 'inflation_rate', 'gdp'].map((field) => (
               <div key={field} className="rounded-2xl bg-slate-900/70 p-4">
                 <p className="text-xs uppercase tracking-[0.2em] text-slate-500">{field}</p>
                 <p className="mt-2 text-lg font-semibold text-white">{savedResult[field]}</p>

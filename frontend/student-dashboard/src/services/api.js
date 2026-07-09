@@ -33,7 +33,7 @@ export async function predictStudent(studentData) {
 
 export function formatGradeLabel(prediction) {
   if (prediction === null || prediction === undefined) return 'No prediction'
-  if (prediction >= 12) return 'High chance of success'
-  if (prediction >= 8) return 'Moderate outcome'
-  return 'At risk / needs support'
+  if (prediction === 'Graduate') return 'High chance of graduating'
+  if (prediction === 'Enrolled') return 'Currently enrolled with moderate risk'
+  return 'At risk of dropping out'
 }
